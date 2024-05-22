@@ -1,29 +1,24 @@
 // Global Vars
 
 
+
 const baseUrl = "http://localhost:3000/"
 let ramenMenu = []
 const menu = document.getElementById("ramen-menu")
-const sumbitBtn = document.getElementById('submit-button')
-
+const form = document.getElementById("new-ramen")
+let idOFAddedRamens = "5"
 // Event listeners
 document.addEventListener("DOMContentLoaded",function(){
-   displayRamens()
-//   settingBackground()
+main()
 })
-
 menu.addEventListener('click', handleClick)
-
-// sumbitBtn.addEventListener('submit', addSubmitListener)
-
-
 
 // Callbacks
 function handleClick(event) {
-console.log(ramenMenu)
-    console.log(event)
-
-    let idOfBowl = ramenMenu.find(theRamen => theRamen.id=== event.target.id).id
+    console.log(event.target.id)
+    console.log(ramenMenu)
+    let idOfBowl = ramenMenu.find(theRamen => theRamen.id == event.target.id).id
+    console.log(idOfBowl)
     let result = ramenMenu.filter(theMenu => theMenu.id === idOfBowl)
 
 document.getElementsByClassName("name")[0].textContent = result[0].name
@@ -34,10 +29,29 @@ document.getElementById("comment-display").textContent = result[0].comment
 
 }
 
-const addSubmitListener = () => {
+const addSubmitListener = (event) => {
+    event.preventDefault()
 
-
+    
+const nameInput = form.querySelector('#new-name').value
+const restInput = form.querySelector('#new-restaurant').value
+const imgInput = form.querySelector('#new-image').value
+const ratingInput = form.querySelector('#new-rating').value
+const commentInput = form.querySelector('#new-comment').value
+parseInt(idOFAddedRamens++)
+const allToghether = {
+    id: idOFAddedRamens,
+    name: nameInput,
+    restaurant: restInput,
+    image: imgInput,
+    rating: ratingInput,
+    comment: commentInput
 }
+
+ramenMenu.push(allToghether)
+renderRamens(allToghether)
+}
+form.addEventListener('submit', addSubmitListener)
 
 async function displayRamens() {
     await fetch(baseUrl + "ramens")
@@ -61,4 +75,21 @@ document.getElementById("comment-display").textContent = ramenMenu[0].comment
 .catch(error => {
     console.log('adding this for potetional extra points!', error)
 })
+}
+
+function renderRamens(e){
+console.log(e)
+console.log(e.image)
+console.log(ramenMenu)
+let img = document.createElement('img')
+img.src = e.image
+img.id = e.id
+const div = document.getElementById("ramen-menu").appendChild(img)
+console.log(img)
+console.log(img.id)
+} 
+
+function main(){
+    displayRamens()
+    addSubmitListener()
 }
